@@ -265,10 +265,11 @@ contract ACryptoSFarmV2 is OwnableUpgradeable {
     }
 
     // Update the given pool's SUSHI allocation point.
-    function set(address _lpToken, uint256 _allocPoint) public onlyStrategist {
+    function set(address _lpToken, uint256 _allocPoint, uint256 _withdrawalFee) public onlyStrategist {
         updatePool(_lpToken);
         totalAllocPoint = totalAllocPoint.sub(poolInfo[_lpToken].allocPoint).add(_allocPoint);
         poolInfo[_lpToken].allocPoint = _allocPoint;
+        poolInfo[_lpToken].withdrawalFee = _withdrawalFee;
     }
 
     function setHarvestFeeAddress(address _harvestFeeAddress) external onlyStrategist {
