@@ -63,13 +63,14 @@ contract ACryptoSFarmV2 is OwnableUpgradeable {
 
     // Info of each pool.
     struct PoolInfo {
-        uint256 totalWeight;      // Total weight of LP tokens users have provided.
+        uint256 totalWeight;      // Total weight of LP tokens users have provided. Used to implement acsACS boost.
         uint256 allocPoint;       // How many allocation points assigned to this pool. SUSHIs to distribute per block.
         uint256 lastRewardBlock;  // Last block number that SUSHIs distribution occurs.
         uint256 accSushiPerShare; // Accumulated SUSHIs per share, times 1e12. See below.
         uint256 withdrawalFee;
     }
 
+    // Used to distribute set % rewards to dev, treasury, ACS Vault and others in future.
     struct AdditionalReward {
         address to;           // Address to receive reward
         uint256 reward;       // divided by REWARD_DENOMINATOR
@@ -162,7 +163,7 @@ contract ACryptoSFarmV2 is OwnableUpgradeable {
         pool.lastRewardBlock = block.number;
     }
 
-    //
+    // Used to display user's future boost in UI
     function calculateWeight(address _lpToken, address _user) public view returns (uint256) {
         UserInfo storage user = userInfo[_lpToken][_user];
         uint256 _weight = IERC20Upgradeable(_lpToken).balanceOf(address(this))
